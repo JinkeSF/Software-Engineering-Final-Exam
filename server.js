@@ -199,6 +199,141 @@ app.get('/api/region-max-tfr', (req, res) => {
     });
 });
 
+// ==========================================
+// 功能 4: Keyword Search (2020)
+// 邏輯：搜尋國家名稱 (模糊比對)，只顯示 2020 年的數據
+// ==========================================
+app.get('/api/search', (req, res) => {
+    const keyword = req.query.keyword;
+
+    // 如果使用者刪光文字，就不顯示任何結果
+    if (!keyword || keyword.trim() === '') return res.send('');
+
+    const sql = `
+        SELECT c.name, f.tfr
+        FROM Country c
+        JOIN FertilityRecord f ON c.alpha_3_code = f.country_code
+        WHERE c.name LIKE ? AND f.year = 2020
+        ORDER BY c.name
+    `;
+
+    // 使用 %keyword% 來做前後模糊比對
+    db.all(sql, [`%${keyword}%`], (err, rows) => {
+        if (err) return res.send(`<div>Error: ${err.message}</div>`);
+        if (rows.length === 0) return res.send('<div>No matches found.</div>');
+
+        let html = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>TFR (2020)</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        rows.forEach(row => {
+            html += `<tr><td>${row.name}</td><td>${row.tfr}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+        res.send(html);
+    });
+});
+
+// ==========================================
+// 功能 5: Add Next Year Record
+// 邏輯：找出該國最大年份，新增一筆 (最大年份+1) 的資料
+// ==========================================
+app.post('/api/add-next-year', (req, res) => {
+    const { country_code } = req.body; // 注意：POST 的資料通常在 body，但 HTMX 預設有時會用 query，我們需確認
+
+    // 為了相容性，我們先嘗試從 body 抓，沒有的話抓 query
+    const code = country_code || req.query.country_code;
+
+    if (!code) return res.send('<div>Please select a country.</div>');
+
+    // 1. 先查出該國目前的最新年份與 TFR
+    db.get("SELECT year, tfr FROM FertilityRecord WHERE country_code = ? ORDER BY year DESC LIMIT 1", [code], (err, row) => {
+        if (err) return res.send(`<div>Error: ${err.message}</div>`);
+        
+        // 如果該國完全沒資料，我們從 2000 年開始
+        let nextYear = 2000;
+        let lastTfr = 2.0; 
+
+        if (row) {
+            nextYear = row.year + 1;
+            lastTfr = row.tfr; // 暫時複製去年的數值
+        }
+
+        // 2. 插入新資料
+        const insertSql = "INSERT INTO FertilityRecord (country_code, year, tfr) VALUES (?, ?, ?)";
+        db.run(insertSql, [code, nextYear, lastTfr], function(err) {
+            if (err) {
+                // 如果重複新增(例如已經按過一次)，資料庫會報錯 (UNIQUE constraint)
+                if (err.message.includes("UNIQUE")) {
+                    return res.send(`<div style="color:red">Error: Record for ${nextYear} already exists!</div>`);
+                }
+                return res.send(`<div>Error: ${err.message}</div>`);
+            }
+            res.send(`<div style="color:green">Success! Added record for ${nextYear} (TFR: ${lastTfr}).</div>`);
+        });
+    });
+});
+
+// ==========================================
+// 功能 6: Update TFR Record
+// 邏輯：更新某國、某年的 TFR 數值
+// ==========================================
+// 為了讓 HTMX 方便，我們用 PUT 方法 (Express 支援)
+app.put('/api/update-record', (req, res) => {
+    // 從 query 或 body 抓取參數
+    const { country_code, year, new_tfr } = req.query; 
+    // 注意：如果是用 form 提交，資料可能在 req.body，這裡我們統一用 hx-include 或 form 
+    // 為了保險，我們判斷一下資料來源
+    const c_code = req.body.country_code || req.query.country_code;
+    const c_year = req.body.year || req.query.year;
+    const c_tfr  = req.body.new_tfr || req.query.new_tfr;
+
+    if (!c_code || !c_year || !c_tfr) {
+        return res.send('<div style="color:red">Missing parameters.</div>');
+    }
+
+    const sql = `UPDATE FertilityRecord SET tfr = ? WHERE country_code = ? AND year = ?`;
+    
+    db.run(sql, [c_tfr, c_code, c_year], function(err) {
+        if (err) return res.send(`<div>Error: ${err.message}</div>`);
+        if (this.changes === 0) return res.send('<div style="color:red">No record found to update.</div>');
+        
+        res.send(`<div style="color:green">Success! Updated ${c_code} in ${c_year} to TFR ${c_tfr}.</div>`);
+    });
+});
+
+// ==========================================
+// 功能 7: Delete TFR Records (Range)
+// 邏輯：刪除某國、某段年份範圍內的資料
+// ==========================================
+app.delete('/api/delete-range', (req, res) => {
+    // 這裡我們假設 HTMX 使用 query string 傳遞參數
+    const { country_code, start_year, end_year } = req.query;
+    // 若使用 hx-include，參數會在 query 中 (因為是 DELETE/GET) 或 body 中
+    // 這裡統一檢查
+    const c_code = country_code || req.body.country_code;
+    const s_year = start_year || req.body.start_year;
+    const e_year = end_year || req.body.end_year;
+
+    if (!c_code || !s_year || !e_year) {
+        return res.send('<div style="color:red">Missing parameters.</div>');
+    }
+
+    const sql = `DELETE FROM FertilityRecord WHERE country_code = ? AND year BETWEEN ? AND ?`;
+    
+    db.run(sql, [c_code, s_year, e_year], function(err) {
+        if (err) return res.send(`<div>Error: ${err.message}</div>`);
+        
+        res.send(`<div style="color:green">Success! Deleted ${this.changes} records for ${c_code} (${s_year}-${e_year}).</div>`);
+    });
+});
+
 // 啟動伺服器
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

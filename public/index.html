@@ -94,5 +94,95 @@
         <div id="result-3"></div>
     </div>
 
+    <div class="box">
+        <h3>4. Keyword Search (2020 Data)</h3>
+        <label>Search Country:</label>
+        
+        <input type="text" 
+               name="keyword" 
+               placeholder="Type country name (e.g., Tai)"
+               hx-get="/api/search" 
+               hx-trigger="keyup changed delay:500ms" 
+               hx-target="#result-4">
+               
+        <div id="result-4"></div>
+    </div>
+
+    <div class="box">
+        <h3>5. Add Next Year Record</h3>
+        <p>Select a country to add a new record for the subsequent year.</p>
+        
+        <form hx-post="/api/add-next-year" hx-target="#result-5">
+            <label>Country:</label>
+            <select name="country_code"
+                    hx-get="/api/countries"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+                <option>Loading...</option>
+            </select>
+            
+            <button type="submit">Add Record</button>
+        </form>
+
+        <div id="result-5"></div>
+    </div>
+
+    <div class="box">
+        <h3>6. Update Record</h3>
+        <form hx-put="/api/update-record" hx-target="#result-6">
+            <label>Country:</label>
+            <select name="country_code"
+                    hx-get="/api/countries"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+                <option>Loading...</option>
+            </select>
+            
+            <label>Year:</label>
+            <select name="year"
+                    hx-get="/api/years"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+            </select>
+
+            <label>New TFR:</label>
+            <input type="number" step="0.01" name="new_tfr" required placeholder="e.g. 1.05">
+
+            <button type="submit">Update</button>
+        </form>
+        <div id="result-6"></div>
+    </div>
+
+    <div class="box">
+        <h3>7. Delete Range</h3>
+        <p>Delete records for a country within a specific year range.</p>
+        
+        <form hx-delete="/api/delete-range" 
+              hx-target="#result-7" 
+              hx-confirm="Are you sure you want to delete these records?">
+            
+            <label>Country:</label>
+            <select name="country_code"
+                    hx-get="/api/countries"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+                <option>Loading...</option>
+            </select>
+            
+            <label>Start Year:</label>
+            <input type="number" name="start_year" placeholder="e.g. 2025" required>
+            
+            <label>End Year:</label>
+            <input type="number" name="end_year" placeholder="e.g. 2030" required>
+
+            <button type="submit" style="background-color: #ffdddd;">Delete Records</button>
+        </form>
+        <div id="result-7"></div>
+    </div>
+
 </body>
 </html>
