@@ -102,10 +102,9 @@ body {
 .main-content {
     margin-left: var(--sidebar-width); /* 留出側邊欄空間 */
     flex: 1;
-    padding: 2rem 4rem 4rem 4rem; /* 增加底部 padding，給下拉選單足夠空間 */
+    padding: 3rem 4rem;
     width: calc(100% - var(--sidebar-width));
     min-height: 100vh;
-    overflow-y: auto; /* 允許內容滾動 */
 }
 
 /* 標題區塊 */
@@ -127,12 +126,11 @@ header h1 {
 .box {
     background: white;
     padding: 2rem;
-    margin-bottom: 3rem; /* 增加卡片之間的間距，給下拉選單更多空間 */
+    margin-bottom: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     border: 1px solid #eef0f2;
     transition: transform 0.2s;
-    min-height: 400px; /* 確保卡片有足夠高度 */
 }
 
 .box:hover {
@@ -184,27 +182,6 @@ tr:nth-child(even) {
 .htmx-request .htmx-indicator,
 .htmx-request.htmx-indicator { 
     opacity: 1; 
-}
-/* --- 下拉選單強制向下展開 --- */
-select {
-    /* 確保下拉選單有足夠空間向下展開 */
-    margin-bottom: 2rem;
-    min-height: 40px;
-}
-
-/* 給 label 和 select 之間增加空間 */
-label {
-    display: block;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-/* 強制 select 下拉選單向下彈出 */
-select:focus {
-    position: relative;
-    z-index: 10;
-}   z-index: 10;
 }
 
 /* --- 手機版響應式 (RWD) --- */
