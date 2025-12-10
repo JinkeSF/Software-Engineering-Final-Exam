@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature 1 - Country TFR History</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feature1" class="active">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4">Keyword Search</a>
+            <a href="/feature5">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7">Delete Range</a>
+            <a href="/feature8">Top 10 Lowest TFR</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <header>
+            <h1>Country TFR History</h1>
+        </header>
+        
+        <div class="box">
+            <p>Select a country to view its Total Fertility Rate history over the years, ordered chronologically.</p>
+            
+            <label>Select Country:</label>
+            <div hx-get="/api/countries" 
+                 hx-trigger="load" 
+                 hx-target="#country-select" 
+                 hx-swap="innerHTML" 
+                 style="display:none"></div>
+
+            <select id="country-select" 
+                    name="country_code" 
+                    hx-get="/api/tfr-history" 
+                    hx-target="#result-1" 
+                    hx-trigger="change">
+                <option value="">Loading countries...</option>
+            </select>
+
+            <div id="result-1"></div>
+        </div>
+    </div>
+</body>
+</html>

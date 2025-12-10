@@ -1,0 +1,240 @@
+/* public/styles.css */
+
+/* --- 全局變數與重置 --- */
+:root { 
+    --primary: #00897b; 
+    --primary-hover: #00695c;
+    --sidebar-width: 320px;  /* 增加寬度從 260px 到 320px */
+}
+
+body { 
+    display: flex; 
+    margin: 0;
+    min-height: 100vh;
+    background-color: #f5f7f9; /* 讓背景帶一點灰，對比白色卡片 */
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden; /* 防止水平捲軸 */
+}
+
+/* --- 左側固定側邊欄 (Sidebar) --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(180deg, #00897b 0%, #004d40 100%); /* 深邃漸層 */
+    color: white;
+    padding: 1rem 1.2rem;
+    
+    /* 關鍵定位設定 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+
+    /* ★★★ 關鍵：強制內容垂直排列 ★★★ */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 隱藏側邊欄的滾動條 (美觀) */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 3px;
+}
+
+.sidebar h2 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 0.75rem;
+    letter-spacing: 1px;
+}
+
+/* --- 導覽容器 --- */
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    width: 100%;
+}
+
+/* --- 導覽連結 (按鈕) --- */
+.sidebar nav a {
+    /* ★★★ 關鍵：區塊元素，強迫換行 ★★★ */
+    display: block; 
+    width: 100%;
+    
+    color: rgba(255,255,255,0.9);
+    padding: 0.65rem 1rem;
+    margin: 0;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    font-size: 0.95rem;
+    border-left: 4px solid transparent; /* 預留左側邊框位置 */
+    box-sizing: border-box; /* 確保 padding 不會撐爆寬度 */
+}
+
+/* 滑鼠滑過特效 */
+.sidebar nav a:hover {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    transform: translateX(4px); /* 微微向右移動 */
+}
+
+/* 當前選中頁面特效 */
+.sidebar nav a.active {
+    background: white;
+    color: var(--primary);
+    font-weight: bold;
+    border-left: 4px solid #b2dfdb; /* 左側亮條 */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* --- 右側主內容區 (Main Content) --- */
+.main-content {
+    margin-left: var(--sidebar-width); /* 留出側邊欄空間 */
+    flex: 1;
+    padding: 2rem 4rem 4rem 4rem; /* 增加底部 padding，給下拉選單足夠空間 */
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    overflow-y: auto; /* 允許內容滾動 */
+}
+
+/* 標題區塊 */
+header { 
+    text-align: left;
+    border-bottom: 3px solid var(--primary);
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+}
+
+header h1 {
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+/* --- 功能區塊卡片 (Box) --- */
+.box {
+    background: white;
+    padding: 2rem;
+    margin-bottom: 3rem; /* 增加卡片之間的間距，給下拉選單更多空間 */
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #eef0f2;
+    transition: transform 0.2s;
+    min-height: 400px; /* 確保卡片有足夠高度 */
+}
+
+.box:hover {
+    transform: translateY(-2px); /* 滑鼠滑過微微浮起 */
+}
+
+.box h3 {
+    color: #333;
+    border-left: 5px solid var(--primary);
+    padding-left: 10px;
+    margin-bottom: 1.5rem;
+}
+
+/* --- 表格優化 --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background-color: var(--primary) !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 12px;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* --- HTMX Loading 動畫 --- */
+.htmx-indicator { 
+    opacity: 0; 
+    transition: opacity 200ms ease-in; 
+    width: 24px; 
+    margin-left: 10px;
+    vertical-align: middle;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator { 
+    opacity: 1; 
+}
+/* --- 下拉選單強制向下展開 --- */
+select {
+    /* 確保下拉選單有足夠空間向下展開 */
+    margin-bottom: 2rem;
+    min-height: 40px;
+}
+
+/* 給 label 和 select 之間增加空間 */
+label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* 強制 select 下拉選單向下彈出 */
+select:focus {
+    position: relative;
+    z-index: 10;
+}   z-index: 10;
+}
+
+/* --- 手機版響應式 (RWD) --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem;
+    }
+
+    .sidebar h2 {
+        margin-bottom: 0.5rem;
+        border-bottom: none;
+    }
+    
+    .sidebar nav a {
+        /* 手機版維持垂直排列，但間距縮小 */
+        display: block;
+        margin: 0.2rem 0;
+        font-size: 0.9rem;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature 8 - Top 10 Lowest TFR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feature1">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4">Keyword Search</a>
+            <a href="/feature5">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7">Delete Range</a>
+            <a href="/feature8" class="active">Top 10 Lowest TFR</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <header>
+            <h1>Top 10 Lowest TFR Countries</h1>
+        </header>
+        
+        <div class="box">
+            <p>View the top 10 countries with the lowest fertility rates in a specific year.</p>
+
+            <form hx-get="/api/top10-lowest" hx-target="#result-8">
+                <label>Year:</label>
+                <select name="year"
+                        hx-get="/api/years"
+                        hx-trigger="load"
+                        hx-target="this"
+                        hx-swap="innerHTML">
+                </select>
+                <button type="submit">Show Rankings</button>
+            </form>
+
+            <div id="result-8"></div>
+        </div>
+    </div>
+</body>
+</html>

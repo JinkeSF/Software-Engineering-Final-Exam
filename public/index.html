@@ -1,188 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFR Analysis</title>
+    <title>Global TFR Analysis</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-        h1 { color: #333; }
-        label { margin-right: 10px; }
-        select, input { padding: 5px; margin-right: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <h1>Global TFR Analysis</h1>
-
-    <div class="box">
-        <h3>1. Country TFR History</h3>
-        <label>Select Country:</label>
-
-        <div hx-get="/api/countries" 
-             hx-trigger="load" 
-             hx-target="#country-select" 
-             hx-swap="innerHTML" 
-             style="display:none"></div>
-
-        <select id="country-select" 
-                name="country_code" 
-                hx-get="/api/tfr-history" 
-                hx-target="#result-1" 
-                hx-trigger="change">
-            <option value="">Loading countries...</option>
-        </select>
-
-        <div id="result-1"></div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/" class="active">Home</a>
+            <a href="/feature1">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4">Keyword Search</a>
+            <a href="/feature5">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7">Delete Range</a>
+            <a href="/feature8">Top 10 Lowest TFR</a>
+        </nav>
     </div>
-
-    <div class="box">
-        <h3>2. Sub-region Snapshot</h3>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>Global TFR Analysis System</h1>
+        </header>
         
-        <label>Region:</label>
-        <select name="sub_region_id"
-                hx-get="/api/subregions" 
-                hx-trigger="load"
-                hx-target="this"
-                hx-swap="innerHTML">
-             <option>Loading...</option>
-        </select>
-
-        <label>Year:</label>
-        <select name="year" id="year-select-2"
-                hx-get="/api/years"
-                hx-trigger="load"
-                hx-target="this"
-                hx-swap="innerHTML">
-        </select>
-
-        <button hx-get="/api/subregion-snapshot"
-                hx-include="[name='sub_region_id'], [name='year']"
-                hx-target="#result-2">
-            Show Data
-        </button>
-
-        <div id="result-2"></div>
-    </div>
-
-    <div class="box">
-        <h3>3. Region Max TFR</h3>
-        <form hx-get="/api/region-max-tfr" hx-target="#result-3">
-            <label>Region:</label>
-            <select name="region_id"
-                    hx-get="/api/regions"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-                <option>Loading...</option>
-            </select>
-
-            <label>Year:</label>
-            <select name="year"
-                    hx-get="/api/years"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-            </select>
-
-            <button type="submit">Show Max TFR</button>
-        </form>
-        <div id="result-3"></div>
-    </div>
-
-    <div class="box">
-        <h3>4. Keyword Search (2020 Data)</h3>
-        <label>Search Country:</label>
-        
-        <input type="text" 
-               name="keyword" 
-               placeholder="Type country name (e.g., Tai)"
-               hx-get="/api/search" 
-               hx-trigger="keyup changed delay:500ms" 
-               hx-target="#result-4">
-               
-        <div id="result-4"></div>
-    </div>
-
-    <div class="box">
-        <h3>5. Add Next Year Record</h3>
-        <p>Select a country to add a new record for the subsequent year.</p>
-        
-        <form hx-post="/api/add-next-year" hx-target="#result-5">
-            <label>Country:</label>
-            <select name="country_code"
-                    hx-get="/api/countries"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-                <option>Loading...</option>
-            </select>
+        <div class="intro-section">
+            <h2>Introduction</h2>
+            <p>
+                The <strong>Total Fertility Rate (TFR)</strong>, commonly expressed as children per woman, is a foundational demographic indicator that is critically important for comparing population dynamics and socioeconomic development across countries and regions. The TFR represents the average number of children a woman would have over her lifetime if she experienced the age-specific fertility rates observed in a given year. This makes it an intuitive and powerful tool for global and regional analysis.
+            </p>
             
-            <button type="submit">Add Record</button>
-        </form>
-
-        <div id="result-5"></div>
+            <h3>Why TFR Matters</h3>
+            
+            <h4>📈 Benchmarking Population Change</h4>
+            <p>
+                The TFR is the primary factor determining a country's future population size and age structure. Comparing the TFR to the replacement level (approximately 2.1 children per woman) immediately classifies a nation as having a growing (above 2.1), shrinking (below 2.1), or stable population (at 2.1, assuming zero net migration).
+            </p>
+            
+            <h4>🌍 Highlighting Socioeconomic Disparities</h4>
+            <p>
+                Differences in TFR reveal significant socioeconomic gaps. Generally, higher TFRs are found in developing countries, correlating with lower levels of female education, limited access to contraception and reproductive health services, and high rates of child mortality. Conversely, lower TFRs in developed nations often indicate delayed childbearing, higher educational attainment, and greater female labor force participation.
+            </p>
+            
+            <h4>🏛️ Informing Policy and Resource Allocation</h4>
+            <p>
+                Governments and international bodies use TFR comparisons to forecast future demands on services. High rates necessitate planning for investments in schools, child healthcare, and maternal care, while sustained low rates signal an impending aging population and the need to adjust policies for pensions, elder care, and workforce size.
+            </p>
+            
+            <h3>About This System</h3>
+            <p>
+                This web application provides comprehensive tools for analyzing Total Fertility Rate data across different countries, regions, and time periods. The system offers eight main features accessible through the sidebar navigation:
+            </p>
+            <ul>
+                <li><strong>Country TFR History:</strong> View historical fertility trends for any country</li>
+                <li><strong>Sub-region Snapshot:</strong> Compare countries within sub-regions for specific years</li>
+                <li><strong>Region Max TFR:</strong> Identify sub-regions with highest fertility rates</li>
+                <li><strong>Keyword Search:</strong> Find countries by name and view their 2020 TFR data</li>
+                <li><strong>Add Records:</strong> Insert new TFR data for future years</li>
+                <li><strong>Update Records:</strong> Modify existing TFR data</li>
+                <li><strong>Delete Range:</strong> Remove TFR records for specified year ranges</li>
+                <li><strong>Top 10 Lowest TFR:</strong> Identify countries with the lowest fertility rates</li>
+            </ul>
+            
+            <p style="margin-top: 2rem; padding: 1rem; background: #e0f2f1; border-radius: 6px; border-left: 4px solid #00897b;">
+                <strong>💡 Getting Started:</strong> Select any feature from the sidebar menu to begin exploring the TFR data. Each feature provides interactive controls and real-time data visualization.
+            </p>
+        </div>
     </div>
-
-    <div class="box">
-        <h3>6. Update Record</h3>
-        <form hx-put="/api/update-record" hx-target="#result-6">
-            <label>Country:</label>
-            <select name="country_code"
-                    hx-get="/api/countries"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-                <option>Loading...</option>
-            </select>
-            
-            <label>Year:</label>
-            <select name="year"
-                    hx-get="/api/years"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-            </select>
-
-            <label>New TFR:</label>
-            <input type="number" step="0.01" name="new_tfr" required placeholder="e.g. 1.05">
-
-            <button type="submit">Update</button>
-        </form>
-        <div id="result-6"></div>
-    </div>
-
-    <div class="box">
-        <h3>7. Delete Range</h3>
-        <p>Delete records for a country within a specific year range.</p>
-        
-        <form hx-delete="/api/delete-range" 
-              hx-target="#result-7" 
-              hx-confirm="Are you sure you want to delete these records?">
-            
-            <label>Country:</label>
-            <select name="country_code"
-                    hx-get="/api/countries"
-                    hx-trigger="load"
-                    hx-target="this"
-                    hx-swap="innerHTML">
-                <option>Loading...</option>
-            </select>
-            
-            <label>Start Year:</label>
-            <input type="number" name="start_year" placeholder="e.g. 2025" required>
-            
-            <label>End Year:</label>
-            <input type="number" name="end_year" placeholder="e.g. 2030" required>
-
-            <button type="submit" style="background-color: #ffdddd;">Delete Records</button>
-        </form>
-        <div id="result-7"></div>
-    </div>
-
+    
 </body>
 </html>

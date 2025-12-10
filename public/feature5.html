@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature 5 - Add Next Year Record</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feature1">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4">Keyword Search</a>
+            <a href="/feature5" class="active">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7">Delete Range</a>
+            <a href="/feature8">Top 10 Lowest TFR</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <header>
+            <h1>Add Next Year Record</h1>
+        </header>
+        
+        <div class="box">
+            <p>Select a country to add a new TFR record for the subsequent year (e.g., if the latest TFR is in 2023, the new TFR is for 2024).</p>
+            
+            <form hx-post="/api/add-next-year" hx-target="#result-5">
+                <label>Country:</label>
+                <select name="country_code"
+                        hx-get="/api/countries"
+                        hx-trigger="load"
+                        hx-target="this"
+                        hx-swap="innerHTML">
+                    <option>Loading...</option>
+                </select>
+                
+                <button type="submit">Add Record</button>
+            </form>
+
+            <div id="result-5"></div>
+        </div>
+    </div>
+</body>
+</html>

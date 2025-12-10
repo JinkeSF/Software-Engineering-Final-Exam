@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature 4 - Keyword Search</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feature1">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4" class="active">Keyword Search</a>
+            <a href="/feature5">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7">Delete Range</a>
+            <a href="/feature8">Top 10 Lowest TFR</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <header>
+            <h1>Keyword Search (2020 Data)</h1>
+        </header>
+        
+        <div class="box">
+            <p>Search for countries by name (partial match) and view their TFRs in 2020, ordered by country name.</p>
+            
+            <label>Search Country:</label>
+            <input type="text" 
+                   name="keyword" 
+                   placeholder="Type country name (e.g., Tai)"
+                   hx-get="/api/search" 
+                   hx-trigger="keyup changed delay:500ms" 
+                   hx-target="#result-4">
+                   
+            <div id="result-4"></div>
+        </div>
+    </div>
+</body>
+</html>

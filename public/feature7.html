@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature 7 - Delete Range</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>TFR Analysis</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/feature1">Country TFR History</a>
+            <a href="/feature2">Sub-region Snapshot</a>
+            <a href="/feature3">Region Max TFR</a>
+            <a href="/feature4">Keyword Search</a>
+            <a href="/feature5">Add Next Year Record</a>
+            <a href="/feature6">Update Record</a>
+            <a href="/feature7" class="active">Delete Range</a>
+            <a href="/feature8">Top 10 Lowest TFR</a>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <header>
+            <h1>Delete Range</h1>
+        </header>
+        
+        <div class="box">
+            <p>Delete TFR records for a country within a specific year range.</p>
+            
+            <form hx-delete="/api/delete-range" 
+                  hx-target="#result-7" 
+                  hx-confirm="Are you sure you want to delete these records?">
+                
+                <label>Country:</label>
+                <select name="country_code"
+                        hx-get="/api/countries"
+                        hx-trigger="load"
+                        hx-target="this"
+                        hx-swap="innerHTML">
+                    <option>Loading...</option>
+                </select>
+                
+                <label>Start Year:</label>
+                <input type="number" name="start_year" placeholder="e.g. 2025" required>
+                
+                <label>End Year:</label>
+                <input type="number" name="end_year" placeholder="e.g. 2030" required>
+
+                <button type="submit" style="background-color: #ffdddd;">Delete Records</button>
+            </form>
+            <div id="result-7"></div>
+        </div>
+    </div>
+</body>
+</html>
