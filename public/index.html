@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFR Analysis</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        h1 { color: #333; }
+        label { margin-right: 10px; }
+        select, input { padding: 5px; margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>Global TFR Analysis</h1>
+
+    <div class="box">
+        <h3>1. Country TFR History</h3>
+        <label>Select Country:</label>
+
+        <div hx-get="/api/countries" 
+             hx-trigger="load" 
+             hx-target="#country-select" 
+             hx-swap="innerHTML" 
+             style="display:none"></div>
+
+        <select id="country-select" 
+                name="country_code" 
+                hx-get="/api/tfr-history" 
+                hx-target="#result-1" 
+                hx-trigger="change">
+            <option value="">Loading countries...</option>
+        </select>
+
+        <div id="result-1"></div>
+    </div>
+
+    <div class="box">
+        <h3>2. Sub-region Snapshot</h3>
+        
+        <label>Region:</label>
+        <select name="sub_region_id"
+                hx-get="/api/subregions" 
+                hx-trigger="load"
+                hx-target="this"
+                hx-swap="innerHTML">
+             <option>Loading...</option>
+        </select>
+
+        <label>Year:</label>
+        <select name="year" id="year-select-2"
+                hx-get="/api/years"
+                hx-trigger="load"
+                hx-target="this"
+                hx-swap="innerHTML">
+        </select>
+
+        <button hx-get="/api/subregion-snapshot"
+                hx-include="[name='sub_region_id'], [name='year']"
+                hx-target="#result-2">
+            Show Data
+        </button>
+
+        <div id="result-2"></div>
+    </div>
+
+    <div class="box">
+        <h3>3. Region Max TFR</h3>
+        <form hx-get="/api/region-max-tfr" hx-target="#result-3">
+            <label>Region:</label>
+            <select name="region_id"
+                    hx-get="/api/regions"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+                <option>Loading...</option>
+            </select>
+
+            <label>Year:</label>
+            <select name="year"
+                    hx-get="/api/years"
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="innerHTML">
+            </select>
+
+            <button type="submit">Show Max TFR</button>
+        </form>
+        <div id="result-3"></div>
+    </div>
+
+</body>
+</html>
