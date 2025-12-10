@@ -215,3 +215,18 @@ tr:nth-child(even) {
         padding: 1.5rem;
     }
 }
+
+/* --- 修正 Delete 按鈕顏色衝突 --- */
+button[role="destructive"], 
+input[type="submit"][role="destructive"] {
+    background-color: var(--pico-del-background-color, #dc3545) !important;
+    border-color: var(--pico-del-border-color, #dc3545) !important;
+    color: var(--pico-del-color, #ffffff) !important;
+}
+
+/* 確保滑鼠滑過時顏色變深 */
+button[role="destructive"]:hover, 
+input[type="submit"][role="destructive"]:hover {
+    background-color: var(--pico-del-hover-background-color, #c82333) !important;
+    border-color: var(--pico-del-hover-border-color, #c82333) !important;
+}
