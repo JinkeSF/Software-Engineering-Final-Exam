@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports:
-      - "3000:3000"
+      - "3005:3000"
     volumes:
       - ./data1.csv:/usr/src/app/data1.csv:ro
       - ./data2.csv:/usr/src/app/data2.csv:ro
